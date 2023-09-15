@@ -2,6 +2,8 @@ import { Wand2 } from "lucide-react"
 import { twMerge } from "tailwind-merge"
 import { ComponentProps, useEffect, useState } from "react"
 
+import { useApp } from "@/contexts/AppContext"
+
 import {
   Select,
   SelectItem,
@@ -25,7 +27,18 @@ interface Prompt {
 interface FormPromptProps extends ComponentProps<"form"> {}
 
 export function FormPrompt({ className, ...rest }: FormPromptProps) {
+  const { setTemplatePrompt, temperature, setTemperature } = useApp()
   const [prompts, setPrompts] = useState<Prompt[] | null>(null)
+
+  function handlePromptSelected(promptId: string) {
+    const selectedPrompt = prompts?.find((prompt) => prompt.id === promptId)
+
+    if (!selectedPrompt) {
+      return
+    }
+
+    setTemplatePrompt(selectedPrompt.template)
+  }
 
   useEffect(() => {
     api.get("/prompts").then((response) => {
@@ -38,7 +51,7 @@ export function FormPrompt({ className, ...rest }: FormPromptProps) {
       <div className="space-y-2">
         <Label>Prompt</Label>
 
-        <Select>
+        <Select onValueChange={handlePromptSelected}>
           <SelectTrigger>
             <SelectValue placeholder="Selecione um prompt..." />
           </SelectTrigger>
@@ -75,7 +88,13 @@ export function FormPrompt({ className, ...rest }: FormPromptProps) {
       <div className="space-y-2">
         <Label>Temperatura</Label>
 
-        <Slider min={0} max={1} step={0.1} defaultValue={[0.5]} />
+        <Slider
+          min={0}
+          max={1}
+          step={0.1}
+          value={[temperature]}
+          onValueChange={(value) => setTemperature(value[0])}
+        />
 
         <span className="block text-xs text-muted-foreground italic leading-relaxed">
           Valores mais altos tendem a deixar o resultado mais criativo e com

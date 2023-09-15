@@ -10,6 +10,8 @@ import { fetchFile } from "@ffmpeg/util"
 import { twMerge } from "tailwind-merge"
 import { FileVideo, Upload } from "lucide-react"
 
+import { useApp } from "@/contexts/AppContext"
+
 import { Label } from "./ui/label"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea"
@@ -30,6 +32,8 @@ const statusMessages = {
 interface FormVideoProps extends ComponentProps<"form"> {}
 
 export function FormVideo({ className, ...rest }: FormVideoProps) {
+  const { setVideoId } = useApp()
+
   const [status, setStatus] = useState<Status>("waiting")
   const [videoFile, setVideoFile] = useState<File | null>(null)
   const promptInputRef = useRef<HTMLTextAreaElement>(null)
@@ -110,6 +114,7 @@ export function FormVideo({ className, ...rest }: FormVideoProps) {
     await api.post(`/videos/${videoId}/transcription`, { prompt })
 
     setStatus("success")
+    setVideoId(videoId)
   }
 
   const previewURL = useMemo(() => {
