@@ -24,6 +24,8 @@ O upload-ai é uma plataforma para gerar títulos e descrições de vídeos base
 
 1. Instalar as dependências na pasta `server` e na pasta `web` com `npm i`
 
-2. Entrar na pasta server e rodar `npm run dev`
+2. Você deve criar uma conta na [open ai](platform.openai.com), pegar o seu token e adicionar em um arquivo `.env` na pasta `server` com o nome de `OPENAI_KEY`
 
-3. Entrar na pasta web e rodar `npm run dev` | O `server` deve permanecer rodando
+3. Entrar na pasta server e rodar `npm run dev`
+
+4. Entrar na pasta web e rodar `npm run dev` | O `server` deve permanecer rodando
