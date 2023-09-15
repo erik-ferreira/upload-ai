@@ -1,6 +1,13 @@
+import {
+  ChangeEvent,
+  ComponentProps,
+  FormEvent,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { twMerge } from "tailwind-merge"
 import { FileVideo, Upload } from "lucide-react"
-import { ChangeEvent, ComponentProps, useMemo, useState } from "react"
 
 import { Label } from "./ui/label"
 import { Button } from "./ui/button"
@@ -11,6 +18,7 @@ interface FormVideoProps extends ComponentProps<"form"> {}
 
 export function FormVideo({ className, ...rest }: FormVideoProps) {
   const [videoFile, setVideoFile] = useState<File | null>(null)
+  const promptInputRef = useRef<HTMLTextAreaElement>(null)
 
   function handleFileSelected(event: ChangeEvent<HTMLInputElement>) {
     const { files } = event.currentTarget
@@ -23,6 +31,20 @@ export function FormVideo({ className, ...rest }: FormVideoProps) {
     setVideoFile(selectedFile)
   }
 
+  function convertVideoToAudio(video: File) {}
+
+  function handleUploadVideo(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const prompt = promptInputRef.current?.value
+
+    if (!videoFile) {
+      return
+    }
+
+    // convert vídeo in áudio - web assembly
+  }
+
   const previewURL = useMemo(() => {
     if (!videoFile) {
       return null
@@ -32,7 +54,11 @@ export function FormVideo({ className, ...rest }: FormVideoProps) {
   }, [videoFile])
 
   return (
-    <form className={twMerge("space-y-4", className)} {...rest}>
+    <form
+      onSubmit={handleUploadVideo}
+      className={twMerge("space-y-4", className)}
+      {...rest}
+    >
       <label
         htmlFor="video"
         className="relative flex flex-col gap-2 items-center justify-center border w-full rounded-md aspect-video cursor-pointer border-dashed text-sm text-muted-foreground hover:bg-primary/30"
@@ -66,6 +92,7 @@ export function FormVideo({ className, ...rest }: FormVideoProps) {
           Prompt de transcrição
         </Label>
         <Textarea
+          ref={promptInputRef}
           id="transcription_prompt"
           className="h-20 leading-relaxed resize-none"
           placeholder="Inclua palavras-chave mencionadas no vídeo separadas por vírgula (,)"
