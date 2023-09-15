@@ -1,6 +1,6 @@
 import { Wand2 } from "lucide-react"
-import { ComponentProps } from "react"
 import { twMerge } from "tailwind-merge"
+import { ComponentProps, useEffect, useState } from "react"
 
 import {
   Select,
@@ -14,9 +14,25 @@ import { Slider } from "./ui/slider"
 import { Button } from "./ui/button"
 import { Separator } from "./ui/separator"
 
+import { api } from "@/lib/api"
+
+interface Prompt {
+  id: string
+  title: string
+  template: string
+}
+
 interface FormPromptProps extends ComponentProps<"form"> {}
 
 export function FormPrompt({ className, ...rest }: FormPromptProps) {
+  const [prompts, setPrompts] = useState<Prompt[] | null>(null)
+
+  useEffect(() => {
+    api.get("/prompts").then((response) => {
+      setPrompts(response.data)
+    })
+  }, [])
+
   return (
     <form className={twMerge("space-y-4", className)} {...rest}>
       <div className="space-y-2">
@@ -28,8 +44,11 @@ export function FormPrompt({ className, ...rest }: FormPromptProps) {
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="title">Título do YouTube</SelectItem>
-            <SelectItem value="description">Descrição do YouTube</SelectItem>
+            {prompts?.map((prompt) => (
+              <SelectItem key={prompt.id} value={prompt.id}>
+                {prompt.title}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
