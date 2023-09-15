@@ -24,10 +24,16 @@ interface Prompt {
   template: string
 }
 
-interface FormPromptProps extends ComponentProps<"form"> {}
+interface FormPromptProps extends ComponentProps<"form"> {
+  isLoadingCompletion?: boolean
+}
 
-export function FormPrompt({ className, ...rest }: FormPromptProps) {
-  const { setTemplatePrompt, temperature, setTemperature } = useApp()
+export function FormPrompt({
+  className,
+  isLoadingCompletion,
+  ...rest
+}: FormPromptProps) {
+  const { setTemplate, temperature, setTemperature } = useApp()
   const [prompts, setPrompts] = useState<Prompt[] | null>(null)
 
   function handlePromptSelected(promptId: string) {
@@ -37,7 +43,7 @@ export function FormPrompt({ className, ...rest }: FormPromptProps) {
       return
     }
 
-    setTemplatePrompt(selectedPrompt.template)
+    setTemplate(selectedPrompt.template)
   }
 
   useEffect(() => {
@@ -104,7 +110,7 @@ export function FormPrompt({ className, ...rest }: FormPromptProps) {
 
       <Separator />
 
-      <Button type="submit" className="w-full">
+      <Button disabled={isLoadingCompletion} type="submit" className="w-full">
         Executar
         <Wand2 className="w-4 h-4 ml-2" />{" "}
       </Button>
