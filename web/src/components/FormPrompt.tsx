@@ -26,14 +26,16 @@ interface Prompt {
 
 interface FormPromptProps extends ComponentProps<"form"> {
   isLoadingCompletion?: boolean
+  setInput: (template: string) => void
 }
 
 export function FormPrompt({
   className,
   isLoadingCompletion,
+  setInput,
   ...rest
 }: FormPromptProps) {
-  const { setTemplate, temperature, setTemperature } = useApp()
+  const { temperature, setTemperature } = useApp()
   const [prompts, setPrompts] = useState<Prompt[] | null>(null)
 
   function handlePromptSelected(promptId: string) {
@@ -43,7 +45,7 @@ export function FormPrompt({
       return
     }
 
-    setTemplate(selectedPrompt.template)
+    setInput(selectedPrompt.template)
   }
 
   useEffect(() => {

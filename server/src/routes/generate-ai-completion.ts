@@ -7,6 +7,7 @@ import { openai } from "../lib/openai"
 
 export async function generateAiCompletion(app: FastifyInstance) {
   app.post("/ai/complete", async (req, reply) => {
+    console.log("request this route ai/complete")
     const bodySchema = z.object({
       videoId: z.string().uuid(),
       template: z.string(),
