@@ -7,14 +7,14 @@ import { openai } from "../lib/openai"
 
 export async function generateAiCompletion(app: FastifyInstance) {
   app.post("/ai/complete", async (req, reply) => {
-    console.log("request this route ai/complete")
     const bodySchema = z.object({
       videoId: z.string().uuid(),
-      template: z.string(),
+      prompt: z.string(),
       temperature: z.number().min(0).max(1).default(0.5),
     })
 
-    const { videoId, template, temperature } = bodySchema.parse(req.body)
+    console.log(req.body)
+    const { videoId, prompt, temperature } = bodySchema.parse(req.body)
 
     const video = await prisma.video.findUniqueOrThrow({
       where: {
@@ -28,10 +28,7 @@ export async function generateAiCompletion(app: FastifyInstance) {
         .send({ error: "Vídeo transcription was not generated yet." })
     }
 
-    const promptMessage = template.replace(
-      "{transcription}",
-      video.transcription
-    )
+    const promptMessage = prompt.replace("{transcription}", video.transcription)
 
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-16k",
