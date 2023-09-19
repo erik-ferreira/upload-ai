@@ -8,6 +8,10 @@ import { Separator } from "./ui/separator"
 interface HeaderProps extends ComponentProps<"div"> {}
 
 export function Header({ className, ...rest }: HeaderProps) {
+  function handleNavigateToRepository() {
+    window.open("https://github.com/erik-ferreira/upload-ai", "_blank")
+  }
+
   return (
     <div
       className={twMerge(
@@ -25,7 +29,11 @@ export function Header({ className, ...rest }: HeaderProps) {
 
         <Separator orientation="vertical" className="h-6" />
 
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          type="button"
+          onClick={handleNavigateToRepository}
+        >
           <Github className="w-4 h-4 mr-2" />
           Github
         </Button>
